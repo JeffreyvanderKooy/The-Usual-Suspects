@@ -30,6 +30,14 @@ class reserveView {
     $('body').on('click', '#submitAttendance', e =>
       handler($('#attendance').val())
     );
+
+    $('body').on('click', '#submitAttendancePlus', e => {
+      let curBonus = state.curRaid.rows.find(
+        row => row.id == state.curUser.id
+      ).bonus;
+
+      handler(++curBonus);
+    });
   }
 
   setPlaceholders(curRaid, curUser) {
@@ -43,6 +51,7 @@ class reserveView {
   _toggleButtons() {
     $('#submitAttendance').removeAttr('disabled');
     $('#submitReserve').removeAttr('disabled');
+    $('#submitAttendancePlus').removeAttr('disabled');
   }
 }
 

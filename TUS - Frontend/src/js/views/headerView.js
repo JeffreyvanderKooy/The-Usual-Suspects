@@ -75,6 +75,7 @@ class HeaderView extends View {
        <label for="attendance">Attendance: </label>
         <input id="attendance" type="number" class="form-control" value="0" min="0" step="1" />
         <button class="btn bg-secondary-subtle fs-5" id="submitAttendance" disabled>Change</button>
+        <button class="btn bg-secondary-subtle fs-5" id="submitAttendancePlus" disabled>+1</button>
       </div>
     </nav>
 `;

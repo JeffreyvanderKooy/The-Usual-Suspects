@@ -4,6 +4,22 @@ import { sortDate } from '../helper';
 class tableView {
   _data; // eg curRaid
 
+  constructor() {
+    $('body').on('keyup', '#search', e => {
+      if (!this._data) return;
+
+      const query = $(e.target).val().toLowerCase();
+
+      if (!query) return this._renderRows(this._data.rows);
+
+      const results = this._data.rows.filter(row =>
+        [row.item, row.name].join(' ').toLowerCase().includes(query)
+      );
+
+      this._renderRows(results);
+    });
+  }
+
   render(curRaid) {
     $('#raid-table')?.remove();
 
@@ -16,6 +32,12 @@ class tableView {
     this._data.rows.sort(sortDate).forEach(this._addRow.bind(this));
   }
 
+  _renderRows(rows) {
+    $('#raid-table tbody').html('');
+
+    rows.sort(sortDate).forEach(this._addRow.bind(this));
+  }
+
   _addRow(row) {
     const markup = this._generateRowMarkup(row);
 
@@ -23,7 +45,8 @@ class tableView {
   }
 
   _generateTableMarkup() {
-    return `<div class="d-flex justify-content-center m-3" id="raid-table">
+    return `<div class="d-flex justify-content-center align-items-center m-3 flex-column gap-4" id="raid-table">
+        <input id="search" type="text" class="form-control w-50" placeholder="search..." />
       <table class="table w-75 table-striped table-hover">
         <thead>
           <tr>
