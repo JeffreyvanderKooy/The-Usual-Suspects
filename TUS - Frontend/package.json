@@ -1,0 +1,26 @@
+{
+  "name": "tus---frontend",
+  "version": "1.0.0",
+  "description": "Frontend for The Usual Suspects SR APP",
+  "default": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "author": "jeffrey van der kooy",
+  "license": "ISC",
+  "devDependencies": {
+    "parcel": "^2.13.3"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
+    "core-js": "^3.40.0",
+    "dotenv": "^16.4.7",
+    "jquery": "^3.7.1",
+    "regenerator-runtime": "^0.14.1",
+    "swal": "^0.1.0",
+    "sweetalert": "^2.1.2"
+  }
+}
