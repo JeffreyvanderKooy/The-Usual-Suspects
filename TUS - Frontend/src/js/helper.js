@@ -30,3 +30,19 @@ export function sortDate(a, b) {
 
   return b - a;
 }
+
+export function validateInput(name, pin) {
+  try {
+    if (!name) throw new Error('Please enter your ingame name.');
+    if (!pin) throw new Error('Please enter your pin.');
+    if (name.split(' ').length > 1)
+      throw new Error('Username must be one word');
+    if (name.split('').some(i => isFinite(i)))
+      throw new Error('Username may not contain numbers!');
+    if (!isFinite(+pin)) throw new Error('Only numbers are allowed for pin.');
+    if (pin.toString().length !== 4)
+      throw new Error('Pin must be 4 characters long.');
+  } catch (error) {
+    throw error;
+  }
+}

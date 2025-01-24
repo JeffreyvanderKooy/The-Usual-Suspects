@@ -1,4 +1,4 @@
-import { getJSON } from './helper';
+import { getJSON, validateInput } from './helper';
 import { API_URL } from './config';
 
 export const state = {
@@ -10,12 +10,9 @@ export async function login(query) {
   try {
     const { name, pin } = query;
 
-    if (!name) throw new Error('Please enter your ingame name.');
-    if (!pin) throw new Error('Please enter your pin');
-    if (pin.toString().length !== 4)
-      throw new Error('Pin must be 4 characters long.');
+    validateInput(name, pin);
 
-    const body = { name, pin };
+    const body = { name: name.trim(), pin };
 
     const res = await getJSON(`${API_URL}/login`, 'POST', body);
 
@@ -31,12 +28,9 @@ export async function register(query) {
   try {
     const { name, pin } = query;
 
-    if (!name) throw new Error('Please enter your ingame name.');
-    if (!pin) throw new Error('Please enter your pin');
-    if (pin.toString().length !== 4)
-      throw new Error('Pin must be 4 characters long.');
+    validateInput(name, pin);
 
-    const body = { name, pin };
+    const body = { name: name.trim(), pin };
 
     const res = await getJSON(`${API_URL}/register`, 'POST', body);
 
