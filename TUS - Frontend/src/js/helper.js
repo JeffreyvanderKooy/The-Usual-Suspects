@@ -40,8 +40,8 @@ export function validateInput(name, pin) {
     if (name.split('').some(i => isFinite(i)))
       throw new Error('Username may not contain numbers!');
     if (!isFinite(+pin)) throw new Error('Only numbers are allowed for pin.');
-    if (pin.toString().length !== 4)
-      throw new Error('Pin must be 4 characters long.');
+    // if (pin.toString().trim().length !== 4)
+    // throw new Error('Pin must be 4 characters long.');
   } catch (error) {
     throw error;
   }
