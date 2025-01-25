@@ -21,15 +21,21 @@ class tableView {
   }
 
   render(curRaid) {
-    $('#raid-table')?.remove();
+    $('#raid-table').html('');
 
     this._data = curRaid;
 
     const markup = this._generateTableMarkup();
 
-    $('body').get(0).insertAdjacentHTML('beforeend', markup);
+    $('#raid-table').get(0).insertAdjacentHTML('beforeend', markup);
 
     this._data.rows.sort(sortDate).forEach(this._addRow.bind(this));
+  }
+
+  renderLoader() {
+    const markup = `<div class="loading">Loading&#8230;</div>`;
+
+    $('#raid-table').html(markup);
   }
 
   _renderRows(rows) {
@@ -45,7 +51,7 @@ class tableView {
   }
 
   _generateTableMarkup() {
-    return `<div class="d-flex justify-content-center align-items-center m-3 flex-column gap-4" id="raid-table">
+    return `
         <input id="search" type="text" class="form-control w-50" placeholder="search..." />
       <table class="table w-75 table-striped table-hover">
         <thead>
@@ -58,7 +64,7 @@ class tableView {
         </thead>
         <tbody></tbody>
       </table>
-    </div>`;
+   `;
   }
 
   _generateRowMarkup(data) {

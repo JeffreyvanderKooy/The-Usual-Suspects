@@ -27,7 +27,7 @@ class modalView {
   }
 
   loader(bool) {
-    $('.loader').toggle(bool);
+    $('.loading').toggle(bool);
   }
 
   async confirm() {

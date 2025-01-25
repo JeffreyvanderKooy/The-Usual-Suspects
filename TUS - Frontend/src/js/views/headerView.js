@@ -3,7 +3,7 @@ import View from './view';
 import { capitalize } from '../helper';
 
 class HeaderView extends View {
-  _parentElement = $('body');
+  _parentElement = $('header');
 
   constructor() {
     super();
@@ -19,6 +19,8 @@ class HeaderView extends View {
   // triggered when clicked on a raid button
   addHandlerFetchRaid(handler) {
     $('body').on('click', '.raid-button', e => {
+      if ($(e.target).hasClass('active')) return;
+
       this._switchActive(e);
 
       const raid = $(e.target).data('raid');

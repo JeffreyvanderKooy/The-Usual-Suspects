@@ -43,11 +43,12 @@ async function controlSubmit(val) {
 
 async function controlFetchRaid(query) {
   try {
+    tableView.renderLoader();
+
     // fetches the data for given raid
     const res = await model.fetchRaid(query);
 
     if (!res.ok) throw new Error(res.message);
-    console.log(model.state.curRaid);
 
     reserveView.setPlaceholders(model.state.curRaid, model.state.curUser);
     tableView.render(model.state.curRaid);
