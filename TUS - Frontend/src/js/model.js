@@ -6,35 +6,17 @@ export const state = {
   curRaid: { name: undefined, reserves: [] },
 };
 
-export async function login(query) {
+export async function login(query, val) {
+  const path = val ? 'login' : 'register';
+
   try {
-    const { name, pin } = query;
+    const { name, pin } = validateInput(query);
 
-    validateInput(name, pin);
+    const body = { name, pin };
 
-    const body = { name: name.trim(), pin };
-
-    const res = await getJSON(`${API_URL}/login`, 'POST', body);
+    const res = await getJSON(`${API_URL}/${path}`, 'POST', body);
 
     updateCurUser(res.data);
-
-    return res;
-  } catch (err) {
-    throw err;
-  }
-}
-
-export async function register(query) {
-  try {
-    const { name, pin } = query;
-
-    validateInput(name, pin);
-
-    const body = { name: name.trim(), pin };
-
-    const res = await getJSON(`${API_URL}/register`, 'POST', body);
-
-    updateCurUser(res.data[0]);
 
     return res;
   } catch (err) {

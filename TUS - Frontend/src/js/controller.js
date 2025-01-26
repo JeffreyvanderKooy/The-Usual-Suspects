@@ -23,7 +23,7 @@ async function controlSubmit(val) {
     const { handler, ...rest } = loginView.submit(val);
 
     // call the right handler (registering or logging in)
-    const res = handler ? await model.login(rest) : await model.register(rest);
+    const res = await model.login(rest, handler);
 
     if (!res.ok) throw new Error(res.message);
 
@@ -31,7 +31,13 @@ async function controlSubmit(val) {
     modalView.succes();
 
     // render the page
-    setTimeout(() => headerView.render(model.state.curUser), HEADER_DELAY_MS);
+    setTimeout(() => {
+      headerView.render(model.state.curUser);
+      if (model.state.curRaid.raid) {
+        reserveView.setPlaceholders(model.state.curRaid, model.state.curUser);
+        tableView.render(model.state.curRaid);
+      }
+    }, HEADER_DELAY_MS);
   } catch (error) {
     // rerenders the login modal with a message
     loginView.render(error.message);

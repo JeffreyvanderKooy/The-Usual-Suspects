@@ -6,6 +6,7 @@ import {
   submitItem,
   insertUser,
   incrementAttendance,
+  validateInput,
 } from './helper.js';
 
 import express from 'express';
@@ -73,12 +74,7 @@ app.get('/raid', async (req, res) => {
 // Login function
 app.post('/login', async (req, res) => {
   try {
-    const { name, pin } = req.body;
-
-    // validate payload
-    if (!pin) throw new Error('Please enter a pin.');
-    if (pin.length !== 4) throw new Error('Pin must be 4 characters long.');
-    if (!name) throw new Error('Please enter your ingame character name.');
+    const { name, pin } = validateInput(req.body);
 
     const user = await getUser(name.toLowerCase(), pin, db);
 
@@ -91,14 +87,9 @@ app.post('/login', async (req, res) => {
 // register function
 app.post('/register', async (req, res) => {
   try {
-    const { name, pin } = req.body;
+    const { name, pin } = validateInput(req.body);
 
-    // validate payload
-    if (!pin) throw new Error('Please enter a pin.');
-    if (pin.length !== 4) throw new Error('Pin must be 4 characters long.');
-    if (!name) throw new Error('Please enter your ingame character name.');
-
-    const { rows: user } = await insertUser(name.toLowerCase(), pin, db);
+    const user = await insertUser(name.toLowerCase(), pin, db);
 
     res.send({ ok: true, data: user });
   } catch (error) {
