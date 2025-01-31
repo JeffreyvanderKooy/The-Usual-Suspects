@@ -161,3 +161,16 @@ export function validateInput(query) {
     throw error;
   }
 }
+
+export function validateRaid(query) {
+  const { raid } = query;
+
+  if (!raid) throw new Error('Please enter a valid raid.');
+
+  const raidsAllowed = ['blackwing_lair', 'emerald_sanctum', 'molten_core'];
+
+  if (!raidsAllowed.includes(raid))
+    throw new Error('Selected raid is not supported.');
+
+  return raid;
+}

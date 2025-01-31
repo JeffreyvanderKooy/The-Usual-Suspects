@@ -7,6 +7,7 @@ import {
   insertUser,
   incrementAttendance,
   validateInput,
+  validateRaid,
 } from './helper.js';
 
 import express from 'express';
@@ -58,10 +59,7 @@ app.get('/users', async (_, res) => {
 // Gets all items reserved for given raid
 app.get('/raid', async (req, res) => {
   try {
-    const { raid } = req.query;
-
-    if (!raid)
-      throw new Error('Could not find a target raid. Please try again.');
+    const raid = validateRaid(req.query);
 
     const rows = await getItems(raid, db);
 
@@ -102,7 +100,6 @@ app.post('/bonus', async (req, res) => {
     const { id, raid, bonus } = req.body;
 
     if (!id) throw new Error('Missing parameter: ID!');
-    if (!raid) throw new Error('Missing parameter: Raid!');
     if (!bonus) throw new Error('Missing parameter: Bonus!');
 
     const result = await incrementAttendance(id, raid, bonus, db);
@@ -116,13 +113,14 @@ app.post('/bonus', async (req, res) => {
 // Reserves a item for given raid
 app.post('/reserve', async (req, res) => {
   try {
-    const { item, id, name, raid } = req.body;
+    const { item, id, name } = req.body;
+
+    const raid = validateRaid(req.body);
 
     // validate payload
     if (!item) throw new Error('Missing parameter: item!');
     if (!id) throw new Error('Missing parameter: ID!');
     if (!name) throw new Error('Missing parameter: name!');
-    if (!raid) throw new Error('Missing parameter: raid!');
 
     const data = {
       item: capitalize(item),
@@ -133,7 +131,7 @@ app.post('/reserve', async (req, res) => {
 
     const result = await submitItem(data, db);
 
-    res.status(201).json({ ok: true, result });
+    res.status(201).json({ ok: true, data: result });
   } catch (error) {
     res.status(400).json({ ok: false, message: error.message });
   }
