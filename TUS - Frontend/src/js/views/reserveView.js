@@ -22,6 +22,8 @@ class reserveView {
 
       if (!confirm) return;
       if (!item) return modalView.error('You must enter an item.');
+      if (isFinite(+item))
+        return modalView.error('Item may not consist of only numbers.');
 
       handler(item);
     });
