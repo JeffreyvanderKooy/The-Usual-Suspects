@@ -20,7 +20,8 @@ class reserveView {
 
       $('#reserve').val('');
 
-      if (!confirm || !item) return;
+      if (!confirm) return;
+      if (!item) return modalView.error('You must enter an item.');
 
       handler(item);
     });
