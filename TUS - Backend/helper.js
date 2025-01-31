@@ -75,8 +75,8 @@ export async function getItems(raid, db) {
   `;
 
   try {
-    const res = await db.query(query);
-    return res;
+    const { rows } = await db.query(query);
+    return rows;
   } catch (err) {
     throw err;
   }
@@ -103,8 +103,8 @@ export async function submitItem(data, db) {
   const values = [id, item, name];
 
   try {
-    const res = await db.query(query, values);
-    return res;
+    const { rows } = await db.query(query, values);
+    return rows;
   } catch (err) {
     throw err;
   }

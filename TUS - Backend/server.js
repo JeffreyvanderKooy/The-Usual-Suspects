@@ -49,9 +49,9 @@ app.get('/users', async (_, res) => {
   try {
     const users = await getAllUsers(db);
 
-    res.send({ ok: true, data: users });
+    res.json({ ok: true, data: users });
   } catch (error) {
-    res.status(400).send({ ok: false, message: error.message });
+    res.status(400).json({ ok: false, message: error.message });
   }
 });
 
@@ -63,11 +63,11 @@ app.get('/raid', async (req, res) => {
     if (!raid)
       throw new Error('Could not find a target raid. Please try again.');
 
-    const { rows } = await getItems(raid, db);
+    const rows = await getItems(raid, db);
 
-    res.send({ ok: true, data: { raid: raid, rows } });
+    res.json({ ok: true, data: { raid, rows } });
   } catch (error) {
-    res.status(400).send({ ok: false, message: error.message });
+    res.status(400).json({ ok: false, message: error.message });
   }
 });
 
@@ -78,9 +78,9 @@ app.post('/login', async (req, res) => {
 
     const user = await getUser(name.toLowerCase(), pin, db);
 
-    res.send({ ok: true, data: user });
+    res.json({ ok: true, data: user });
   } catch (error) {
-    res.status(400).send({ ok: false, message: error.message });
+    res.status(400).json({ ok: false, message: error.message });
   }
 });
 
@@ -91,9 +91,9 @@ app.post('/register', async (req, res) => {
 
     const user = await insertUser(name.toLowerCase(), pin, db);
 
-    res.send({ ok: true, data: user });
+    res.json({ ok: true, data: user });
   } catch (error) {
-    res.status(400).send({ ok: false, message: error.message });
+    res.status(400).json({ ok: false, message: error.message });
   }
 });
 
@@ -105,11 +105,11 @@ app.post('/bonus', async (req, res) => {
     if (!raid) throw new Error('Missing parameter: Raid!');
     if (!bonus) throw new Error('Missing parameter: Bonus!');
 
-    const response = await incrementAttendance(id, raid, bonus, db);
+    const result = await incrementAttendance(id, raid, bonus, db);
 
-    res.send({ ok: true, data: response });
+    res.status(201).json({ ok: true, data: result });
   } catch (error) {
-    res.status(400).send({ ok: false, message: error.message });
+    res.status(400).json({ ok: false, message: error.message });
   }
 });
 
@@ -131,11 +131,11 @@ app.post('/reserve', async (req, res) => {
       name: capitalize(name),
     };
 
-    const { rows } = await submitItem(data, db);
+    const result = await submitItem(data, db);
 
-    res.send({ ok: true, result: rows });
+    res.status(201).json({ ok: true, result });
   } catch (error) {
-    res.status(400).send({ ok: false, message: error.message });
+    res.status(400).json({ ok: false, message: error.message });
   }
 });
 
