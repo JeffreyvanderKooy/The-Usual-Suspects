@@ -11,8 +11,7 @@ class reserveView {
       const curItem = $('#reserve').attr('placeholder');
       const item = $('#reserve').val().toLowerCase();
 
-      if (curItem == 'none' && !item)
-        return modalView.error('Please enter an item.');
+      if (curItem == 'none') return modalView.error('Please enter an item.');
       if (!state.curRaid.raid)
         return modalView.error('You must select a raid to reserve an item');
 
