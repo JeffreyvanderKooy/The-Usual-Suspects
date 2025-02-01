@@ -52,7 +52,7 @@ class tableView {
 
   _generateTableMarkup() {
     return `
-        <input id="search" type="text" class="form-control w-50" placeholder="search..." />
+        <input id="search" type="text" class="form-control w-50" autocomplete="off" placeholder="search..." />
       <table class="table w-75 table-striped table-hover">
         <thead>
           <tr>

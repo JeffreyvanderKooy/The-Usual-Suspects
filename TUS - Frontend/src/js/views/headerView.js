@@ -31,11 +31,17 @@ class HeaderView extends View {
 
   _generateMarkup() {
     return `<nav
-      class="navbar bg-info-subtle border-bottom border-body p-3 text-white"
+      class="navbar bg-info-subtle border-bottom border-body p-3 text-white position-relative"
       data-bs-theme="dark"
     >
-      <h4>BETA</h4>
-      <h1>Welcome, ${capitalize(this._data.name)}</h1>
+      <div class="d-flex align-items-center gap-2 fst-italic">
+      <a class="fs-1 text-white" role="button" href="https://github.com/JeffreyvanderKooy">
+        <i class="bi bi-github"></i>
+      </a>
+      <p class="m-0 p-0">Created by Jeffrey van der Kooy™</p></div>
+      <h1 class="position-absolute top-50 start-50 translate-middle">Welcome, ${capitalize(
+        this._data.name
+      )}</h1>
       <h5>
         <button class="btn bg-secondary-subtle fs-5" id="logout">
           Change Character
@@ -70,7 +76,7 @@ class HeaderView extends View {
     >
       <div class="d-flex gap-3 align-items-center">
       <label for="reserve">Item: </label>
-        <input id="reserve" type="text" class="form-control" placeholder="none" />
+        <input id="reserve" type="text" autocomplete="off" class="form-control" placeholder="none" />
         <button class="btn bg-secondary-subtle fs-5" id="submitReserve" disabled>Reserve</button>
         <button type="button" id="deleteReserve" disabled class="btn bg-secondary-subtle fs-5">
                 <i class="bi bi-trash3-fill"></i>
