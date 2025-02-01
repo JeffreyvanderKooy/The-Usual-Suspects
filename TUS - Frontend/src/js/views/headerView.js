@@ -47,13 +47,19 @@ class HeaderView extends View {
       class="bg-info-subtle border-bottom border-body p-3 text-white d-flex justify-content-center gap-3 p-3"
       data-bs-theme="dark"
     >
-      <button class="btn raid-button bg-secondary-subtle fs-5" data-raid="molten_core">
+      <button class="btn raid-button bg-secondary-subtle fs-5 ${
+        this._data.raid === 'molten_core' && 'active'
+      }" data-raid="molten_core">
         Molten Core
       </button>
-      <button class="btn raid-button bg-secondary-subtle fs-5" data-raid="blackwing_lair">
+      <button class="btn raid-button bg-secondary-subtle fs-5 ${
+        this._data.raid === 'blackwing_lair' && 'active'
+      }" data-raid="blackwing_lair">
         Blackwing Lair
       </button>
-      <button class="btn raid-button bg-secondary-subtle fs-5" data-raid="emerald_sanctum">
+      <button class="btn raid-button bg-secondary-subtle fs-5 ${
+        this._data.raid === 'emerald_sanctum' && 'active'
+      }" data-raid="emerald_sanctum">
         Emerald Sanctum
       </button>
     </div>
@@ -65,7 +71,10 @@ class HeaderView extends View {
       <div class="d-flex gap-3 align-items-center">
       <label for="reserve">Item: </label>
         <input id="reserve" type="text" class="form-control" placeholder="none" />
-        <button class="btn bg-secondary-subtle fs-5" id="submitReserve" disabled>Change</button>
+        <button class="btn bg-secondary-subtle fs-5" id="submitReserve" disabled>Reserve</button>
+        <button type="button" id="deleteReserve" disabled class="btn bg-secondary-subtle fs-5">
+                <i class="bi bi-trash3-fill"></i>
+              </button>
       </div>
 
       <div class="d-flex gap-3 align-items-center fs-4">
@@ -75,9 +84,9 @@ class HeaderView extends View {
 
        <div class="d-flex gap-3 d-flex align-items-center">
        <label for="attendance">Attendance: </label>
-        <input id="attendance" type="number" class="form-control" value="0" min="0" step="1" />
-        <button class="btn bg-secondary-subtle fs-5" id="submitAttendance" disabled>Change</button>
-        <button class="btn bg-secondary-subtle fs-5" id="submitAttendancePlus" disabled>+1</button>
+        <input id="attendance" type="number" class="form-control pointer-events-none" value="0" min="0" step="1" readonly />
+        <button class="btn bg-secondary-subtle fs-5 submitAttendance" data-operator="+" disabled>+1</button>
+        <button class="btn bg-secondary-subtle fs-5 submitAttendance" data-operator="-" disabled>-1</button>
       </div>
     </nav>
 `;

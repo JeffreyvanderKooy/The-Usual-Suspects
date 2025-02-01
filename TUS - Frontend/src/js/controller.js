@@ -32,7 +32,10 @@ async function controlSubmit(val) {
 
     // render the page
     setTimeout(() => {
-      headerView.render(model.state.curUser);
+      headerView.render({
+        ...model.state.curUser,
+        raid: model.state.curRaid.raid,
+      });
       if (model.state.curRaid.raid) {
         reserveView.setPlaceholders(model.state.curRaid, model.state.curUser);
         tableView.render(model.state.curRaid);
@@ -87,6 +90,28 @@ async function controlReserve(item) {
   }
 }
 
+async function controlDelete() {
+  const { id } = model.state.curUser;
+  const { raid } = model.state.curRaid;
+
+  const query = { id, raid };
+
+  try {
+    const res = await model.deleteReserve(query);
+
+    if (!res.ok) throw new Error(res.message);
+
+    await model.fetchRaid(raid);
+
+    modalView.succes();
+    reserveView.setPlaceholders(model.state.curRaid, model.state.curUser);
+    tableView.render(model.state.curRaid);
+  } catch (err) {
+    modalView.error(err.message);
+    console.error(err);
+  }
+}
+
 async function controlAttendance(attendance) {
   if (attendance < 0) return modalView.error();
 
@@ -118,6 +143,7 @@ async function controlAttendance(attendance) {
   headerView.addHandlerLogout(loginView.render, loginView);
   headerView.addHandlerFetchRaid(controlFetchRaid);
   reserveView.addHandlerReserve(controlReserve);
+  reserveView.addHandlerDelete(controlDelete);
   reserveView.addHandlerAttendance(controlAttendance);
 
   loginView.render();

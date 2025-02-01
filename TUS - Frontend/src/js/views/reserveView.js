@@ -8,10 +8,8 @@ class reserveView {
 
   addHandlerReserve(handler) {
     $('body').on('click', '#submitReserve', async e => {
-      const curItem = $('#reserve').attr('placeholder');
       const item = $('#reserve').val().toLowerCase();
 
-      if (curItem == 'none') return modalView.error('Please enter an item.');
       if (!state.curRaid.raid)
         return modalView.error('You must select a raid to reserve an item');
 
@@ -29,16 +27,22 @@ class reserveView {
   }
 
   addHandlerAttendance(handler) {
-    $('body').on('click', '#submitAttendance', e =>
-      handler($('#attendance').val())
-    );
-
-    $('body').on('click', '#submitAttendancePlus', e => {
+    $('body').on('click', '.submitAttendance', e => {
       let curBonus = state.curRaid.rows.find(
         row => row.id == state.curUser.id
       ).bonus;
 
-      handler(++curBonus);
+      const operator = $(e.target).data('operator');
+
+      handler(eval(`${curBonus}${operator}1`));
+    });
+  }
+
+  addHandlerDelete(handler) {
+    $('body').on('click', '#deleteReserve', async e => {
+      const confirm = await modalView.confirm();
+
+      if (confirm) handler();
     });
   }
 
@@ -51,9 +55,9 @@ class reserveView {
   }
 
   _toggleButtons() {
-    $('#submitAttendance').removeAttr('disabled');
+    $('.submitAttendance').each((_, btn) => $(btn).removeAttr('disabled'));
     $('#submitReserve').removeAttr('disabled');
-    $('#submitAttendancePlus').removeAttr('disabled');
+    $('#deleteReserve').removeAttr('disabled');
   }
 }
 

@@ -38,7 +38,9 @@ export async function fetchRaid(query) {
 
 export async function incrementAttendance(query) {
   try {
-    const res = await getJSON(`${API_URL}/bonus`, 'POST', query);
+    const res = await getJSON(`${API_URL}/bonus`, 'PATCH', query);
+
+    if (!res.ok) throw new Error(res.message);
 
     await fetchRaid(query.raid);
 
@@ -51,6 +53,18 @@ export async function incrementAttendance(query) {
 export async function reserve(query) {
   try {
     const res = await getJSON(`${API_URL}/reserve`, 'POST', query);
+
+    if (!res.ok) throw new Error(res.message);
+
+    return res;
+  } catch (err) {
+    throw err;
+  }
+}
+
+export async function deleteReserve(query) {
+  try {
+    const res = await getJSON(`${API_URL}/reserve`, 'DELETE', query);
 
     if (!res.ok) throw new Error(res.message);
 
