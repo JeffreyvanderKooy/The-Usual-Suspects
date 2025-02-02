@@ -1,5 +1,3 @@
-console.log(process.env.NODE_ENV.length);
-
 export const API_URL =
   process.env.NODE_ENV === 'development'
     ? 'http://localhost:3000'

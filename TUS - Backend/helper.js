@@ -7,20 +7,16 @@ function capitalize(str) {
 }
 
 function validateName(name) {
-  if (!name) throw new Error('Please enter your ingame name.');
-  if (name.split(' ').length > 1) throw new Error('Username must be one word.');
+  if (!name) return 'Please enter your ingame name.';
+  if (name.split(' ').length > 1) return 'Username must be one word.';
   if (name.split('').some(i => isFinite(i)))
-    throw new Error('Username may not contain numbers.');
-
-  return name.toLowerCase().trim();
+    return 'Username may not contain numbers.';
 }
 function validatePin(pin) {
-  if (!pin) throw new Error('Please enter your pin.');
-  if (!isFinite(+pin)) throw new Error('Only numbers are allowed for pin.');
+  if (!pin) return 'Please enter your pin.';
+  if (!isFinite(+pin)) return 'Only numbers are allowed for pin.';
   if (pin.toString().trim().length !== 4)
-    throw new Error('Pin must be 4 characters long.');
-
-  return pin;
+    return 'Pin must be 4 characters long.';
 }
 
 function validateRaid(raid) {

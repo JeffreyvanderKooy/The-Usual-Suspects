@@ -52,7 +52,7 @@ async function controlSubmit(val) {
 
 async function controlFetchRaid(query) {
   try {
-    tableView.renderLoader();
+    tableView.loader(true);
 
     // fetches the data for given raid
     const res = await model.fetchRaid(query);
@@ -64,6 +64,8 @@ async function controlFetchRaid(query) {
   } catch (err) {
     modalView.error(err.message);
     console.error(err);
+  } finally {
+    tableView.loader(false);
   }
 }
 

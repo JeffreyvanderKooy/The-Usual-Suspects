@@ -1,6 +1,5 @@
 import { getJSON, validateInput } from './helper';
 import { API_URL } from './config';
-console.log(API_URL);
 
 export const state = {
   curUser: { id: undefined, name: undefined, admin: false },
@@ -15,7 +14,7 @@ export async function login(query, val) {
 
     const body = { name, pin };
 
-    const res = await getJSON(`${API_URL}/${path}`, 'POST', body);
+    const res = await getJSON(`${API_URL}/api/v1/users/${path}`, 'POST', body);
 
     updateCurUser(res.data);
 
@@ -27,7 +26,7 @@ export async function login(query, val) {
 
 export async function fetchRaid(query) {
   try {
-    const res = await getJSON(`${API_URL}/raid?raid=${query}`);
+    const res = await getJSON(`${API_URL}/api/v1/raids/raid?raid=${query}`);
 
     updateCurRaid(res.data);
 
@@ -39,7 +38,7 @@ export async function fetchRaid(query) {
 
 export async function incrementAttendance(query) {
   try {
-    const res = await getJSON(`${API_URL}/bonus`, 'PATCH', query);
+    const res = await getJSON(`${API_URL}/api/v1/raids/bonus`, 'PATCH', query);
 
     if (!res.ok) throw new Error(res.message);
 
@@ -53,7 +52,7 @@ export async function incrementAttendance(query) {
 
 export async function reserve(query) {
   try {
-    const res = await getJSON(`${API_URL}/reserve`, 'POST', query);
+    const res = await getJSON(`${API_URL}/api/v1/raids/reserve`, 'POST', query);
 
     if (!res.ok) throw new Error(res.message);
 
@@ -65,7 +64,11 @@ export async function reserve(query) {
 
 export async function deleteReserve(query) {
   try {
-    const res = await getJSON(`${API_URL}/reserve`, 'DELETE', query);
+    const res = await getJSON(
+      `${API_URL}/api/v1/raids/reserve`,
+      'DELETE',
+      query
+    );
 
     if (!res.ok) throw new Error(res.message);
 

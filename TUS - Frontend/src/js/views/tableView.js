@@ -32,10 +32,11 @@ class tableView {
     this._data.rows.sort(sortDate).forEach(this._addRow.bind(this));
   }
 
-  renderLoader() {
-    const markup = `<div class="loading">Loading&#8230;</div>`;
-
-    $('#raid-table').html(markup);
+  loader(bool) {
+    if (bool) {
+      const markup = `<div class="loading">Loading&#8230;</div>`;
+      $('#raid-table').html(markup);
+    } else if (!bool) $('#raid-table .loading')?.remove();
   }
 
   _renderRows(rows) {
