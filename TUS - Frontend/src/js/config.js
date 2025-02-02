@@ -1,3 +1,7 @@
-export const API_URL = 'https://usual-suspects.onrender.com';
-// export const API_URL = 'http://localhost:3000';
+console.log(process.env.NODE_ENV.length);
+
+export const API_URL =
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:3000'
+    : 'https://usual-suspects.onrender.com';
 export const HEADER_DELAY_MS = 1000;

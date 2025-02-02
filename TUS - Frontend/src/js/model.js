@@ -1,5 +1,6 @@
 import { getJSON, validateInput } from './helper';
 import { API_URL } from './config';
+console.log(API_URL);
 
 export const state = {
   curUser: { id: undefined, name: undefined, admin: false },
