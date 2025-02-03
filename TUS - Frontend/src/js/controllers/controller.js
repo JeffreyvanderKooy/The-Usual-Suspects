@@ -5,15 +5,15 @@ import 'regenerator-runtime/runtime';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import * as model from './model';
+import * as model from '../models/model';
 
-import loginView from './views/loginView';
-import headerView from './views/headerView';
-import modalView from './views/modalView';
-import reserveView from './views/reserveView';
-import tableView from './views/tableView';
+import loginView from '../views/loginView';
+import headerView from '../views/headerView';
+import modalView from '../views/modalView';
+import reserveView from '../views/reserveView';
+import tableView from '../views/tableView';
 
-import { HEADER_DELAY_MS } from './config';
+import { HEADER_DELAY_MS } from '../config';
 
 async function controlSubmit(val) {
   try {

@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import View from './view';
 import swal from 'sweetalert';
 
 class LoginView {

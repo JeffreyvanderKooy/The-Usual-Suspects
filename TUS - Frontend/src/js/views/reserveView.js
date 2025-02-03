@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import modalView from './modalView';
-import { state } from '../model';
+import { state } from '../models/model';
 
 class reserveView {
   _data;
