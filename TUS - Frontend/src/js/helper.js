@@ -28,7 +28,7 @@ export function sortDate(a, b) {
     return new Date(`${mm}/${dd}/${yy}, ${time}`);
   });
 
-  return b - a;
+  return a - b;
 }
 
 export function validateInput(query) {

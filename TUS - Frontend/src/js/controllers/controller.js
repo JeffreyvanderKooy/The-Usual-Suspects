@@ -139,6 +139,17 @@ async function controlAttendance(attendance) {
   }
 }
 
+async function controlRefreshTable() {
+  try {
+    await model.fetchRaid(model.state.curRaid.raid);
+
+    tableView.renderRows(model.state.curRaid.rows);
+  } catch (err) {
+    modalView.error(err.message);
+    console.error(err);
+  }
+}
+
 (async function init() {
   // adding event handlers
   loginView.addHandlerSubmit(controlSubmit);
@@ -147,6 +158,7 @@ async function controlAttendance(attendance) {
   reserveView.addHandlerReserve(controlReserve);
   reserveView.addHandlerDelete(controlDelete);
   reserveView.addHandlerAttendance(controlAttendance);
+  tableView.addHandlerRefresh(controlRefreshTable);
 
   loginView.render();
 })();

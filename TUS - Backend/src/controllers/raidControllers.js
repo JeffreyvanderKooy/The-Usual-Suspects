@@ -1,10 +1,15 @@
 const dbQuery = require('../database/dbQueries');
 
-const { capitalize } = require('../helper');
+const { capitalize } = require('../helpers/helper');
 
 exports.validateRaid = (req, res, next) => {
   const raid = req.body.raid || req.query.raid;
-  const raidsAllowed = ['blackwing_lair', 'emerald_sanctum', 'molten_core'];
+  const raidsAllowed = [
+    'blackwing_lair',
+    'emerald_sanctum',
+    'molten_core',
+    'ahn_qiraj',
+  ];
   let message;
 
   if (!raid) message = 'Please enter a valid raid.';

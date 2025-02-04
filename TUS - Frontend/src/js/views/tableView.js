@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import { sortDate } from '../helper';
+import { RAID_DATA } from '../config';
 
 class tableView {
   _data; // eg curRaid
@@ -20,6 +21,10 @@ class tableView {
     });
   }
 
+  addHandlerRefresh(handler) {
+    $('#raid-table').on('click', '#refresh', handler);
+  }
+
   render(curRaid) {
     $('#raid-table').html('');
 
@@ -29,7 +34,7 @@ class tableView {
 
     $('#raid-table').get(0).insertAdjacentHTML('beforeend', markup);
 
-    this._data.rows.sort(sortDate).forEach(this._addRow.bind(this));
+    this._data.rows.sort(sortDate).forEach(this.addRow.bind(this));
   }
 
   loader(bool) {
@@ -39,22 +44,33 @@ class tableView {
     } else if (!bool) $('#raid-table .loading')?.remove();
   }
 
-  _renderRows(rows) {
+  renderRows(rows) {
     $('#raid-table tbody').html('');
 
-    rows.sort(sortDate).forEach(this._addRow.bind(this));
+    rows.sort(sortDate).forEach(this.addRow.bind(this));
   }
 
-  _addRow(row) {
+  addRow(row) {
     const markup = this._generateRowMarkup(row);
 
-    $('#raid-table tbody').get(0).insertAdjacentHTML('beforeend', markup);
+    $('#raid-table tbody').get(0).insertAdjacentHTML('afterbegin', markup);
   }
 
   _generateTableMarkup() {
     return `
-        <input id="search" type="text" class="form-control w-50" autocomplete="off" placeholder="search..." />
-      <table class="table w-75 table-striped table-hover">
+      ${
+        RAID_DATA[this._data.raid].banned.length === 0
+          ? `<div class="p-2 shadow  bg-success-subtle rounded border border-success fw-bold"><i class="bi bi-check2-all"></i> You may reserve loot from all bosses</div>`
+          : `<div class="p-2 shadow  bg-danger-subtle rounded border border-danger fw-bold"><i class="bi bi-exclamation-lg"></i> Do not reserve loot from: ${RAID_DATA[
+              this._data.raid
+            ].banned.join(', ')}</div>`
+      }   <div class="input-group w-50 shadow">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input id="search" type="text" class="form-control w-50" autocomplete="off" placeholder="search..." />
+            <button class="btn btn-outline-secondary input-group-text d-flex align-items-center gap-1" id="refresh">Refresh <i class="bi bi-arrow-clockwise"></i></button>
+          </div>
+
+      <table class="table w-75 table-striped table-hover shadow rounded border">
         <thead>
           <tr>
             <th>Player</th>

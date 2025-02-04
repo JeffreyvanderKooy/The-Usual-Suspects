@@ -1,6 +1,6 @@
 const dbQuery = require('../database/dbQueries');
 
-const { validateName, validatePin } = require('../helper');
+const { validateName, validatePin } = require('../helpers/helper');
 
 exports.validateInfo = (req, res, next) => {
   const errorMessage1 = validateName(req.body.name);

@@ -31,28 +31,12 @@ class HeaderView extends View {
 
   _generateMarkup() {
     return `<nav
-      class="navbar bg-info-subtle border-bottom border-body p-3 text-white position-relative"
+      class="navbar bg-info-subtle border-body shadow-lg p-3 text-white position-relative"
       data-bs-theme="dark"
     >
-      <div class="d-flex align-items-center gap-2 fst-italic">
-      <a class="fs-1 text-white" role="button" href="https://github.com/JeffreyvanderKooy">
-        <i class="bi bi-github"></i>
-      </a>
-      <p class="m-0 p-0">Created by Jeffrey van der Kooy™</p></div>
-      <h1 class="position-absolute top-50 start-50 translate-middle">Welcome, ${capitalize(
-        this._data.name
-      )}</h1>
-      <h5>
-        <button class="btn bg-secondary-subtle fs-5" id="logout">
-          Change Character
-          <i class="bi bi-person"></i>
-        </button>
-      </h5>
-    </nav>
-    <div
-      class="bg-info-subtle border-bottom border-body p-3 text-white d-flex justify-content-center gap-3 p-3"
-      data-bs-theme="dark"
-    >
+      <h1 class="">${capitalize(this._data.name)}</h1>
+
+      <div class="d-flex gap-3">
       <button class="btn raid-button bg-secondary-subtle fs-5 ${
         this._data.raid === 'molten_core' && 'active'
       }" data-raid="molten_core">
@@ -68,17 +52,30 @@ class HeaderView extends View {
       }" data-raid="emerald_sanctum">
         Emerald Sanctum
       </button>
+       <button class="btn raid-button bg-secondary-subtle fs-5 ${
+         this._data.raid === 'ahn_qiraj' && 'active'
+       }" data-raid="ahn_qiraj">
+        Temple of Ahn'Qiraj
+      </button>
     </div>
+      <h5>
+        <button class="btn bg-secondary-subtle fs-5" id="logout">
+          Change Character
+          <i class="bi bi-person"></i>
+        </button>
+      </h5>
+    </nav>
+   
 
     <nav
-      class="navbar bg-info-subtle border-bottom border-body text-white d-flex justify-content-evenly"
-      data-bs-theme="dark"
+      class="navbar border-body d-flex justify-content-evenly shadow-lg pt-3"
+      
     >
       <div class="d-flex gap-3 align-items-center">
-      <label for="reserve">Item: </label>
-        <input id="reserve" type="text" autocomplete="off" class="form-control" placeholder="none" />
-        <button class="btn bg-secondary-subtle fs-5" id="submitReserve" disabled>Reserve</button>
-        <button type="button" id="deleteReserve" disabled class="btn bg-secondary-subtle fs-5">
+      <label for="reserve" class="fw-bold">Item: </label>
+        <input id="reserve" type="text" autocomplete="off" class="form-control border" placeholder="none" />
+        <button class="btn btn-outline-dark" id="submitReserve" disabled>Reserve</button>
+        <button type="button" id="deleteReserve" disabled class="btn btn-outline-dark">
                 <i class="bi bi-trash3-fill"></i>
               </button>
       </div>
@@ -89,10 +86,10 @@ class HeaderView extends View {
       </div>
 
        <div class="d-flex gap-3 d-flex align-items-center">
-       <label for="attendance">Attendance: </label>
-        <input id="attendance" type="number" class="form-control pointer-events-none" value="0" min="0" step="1" readonly />
-        <button class="btn bg-secondary-subtle fs-5 submitAttendance" data-operator="+" disabled>+1</button>
-        <button class="btn bg-secondary-subtle fs-5 submitAttendance" data-operator="-" disabled>-1</button>
+       <label for="attendance" class="fw-bold">Attendance: </label>
+        <input id="attendance" type="number" class="form-control pointer-events-none border" value="0" min="0" step="1" readonly />
+        <button class="btn btn-outline-dark submitAttendance" data-operator="+" disabled>+1</button>
+        <button class="btn btn-outline-dark submitAttendance" data-operator="-" disabled>-1</button>
       </div>
     </nav>
 `;
@@ -101,6 +98,14 @@ class HeaderView extends View {
   _switchActive(e) {
     $('.active').removeClass('active');
     $(e.target).addClass('active');
+  }
+
+  _renderCredentials() {
+    return `<div class="d-flex align-items-center gap-2 fst-italic">
+      <a class="fs-1 text-white" role="button" href="https://github.com/JeffreyvanderKooy">
+        <i class="bi bi-github"></i>
+      </a>
+      <p class="m-0 p-0">Created by Jeffrey van der Kooy™</p></div>`;
   }
 }
 

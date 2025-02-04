@@ -15,8 +15,8 @@ app.use(
   })
 );
 
-const raidRouter = require('./routes/raidRoute');
-const userRouter = require('./routes/userRoute');
+const raidRouter = require('./src/routes/raidRoute');
+const userRouter = require('./src/routes/userRoute');
 
 app.use('/api/v1/raids', raidRouter);
 app.use('/api/v1/users', userRouter);

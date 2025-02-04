@@ -3,7 +3,7 @@ import { API_URL } from '../config';
 
 export const state = {
   curUser: { id: undefined, name: undefined, admin: false },
-  curRaid: { name: undefined, reserves: [] },
+  curRaid: { name: undefined, rows: [] },
 };
 
 export async function login(query, val) {

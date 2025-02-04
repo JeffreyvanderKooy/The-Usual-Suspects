@@ -58,6 +58,8 @@ class reserveView {
     $('.submitAttendance').each((_, btn) => $(btn).removeAttr('disabled'));
     $('#submitReserve').removeAttr('disabled');
     $('#deleteReserve').removeAttr('disabled');
+    $('#reserve').addClass('border-secondary');
+    $('#attendance').addClass('border-secondary');
   }
 }
 
