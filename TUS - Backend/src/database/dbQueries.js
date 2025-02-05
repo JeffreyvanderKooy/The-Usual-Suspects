@@ -105,7 +105,7 @@ async function getUsers() {
     const { rows } = await db.query(query);
     return rows;
   } catch (err) {
-    console.error('Error executing query: ', err);
+    throw err;
   }
 }
 
