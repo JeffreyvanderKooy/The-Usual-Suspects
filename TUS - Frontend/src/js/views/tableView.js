@@ -11,7 +11,7 @@ class tableView {
 
       const query = $(e.target).val().toLowerCase();
 
-      if (!query) return this._renderRows(this._data.rows);
+      if (!query) return this.renderRows(this._data.rows);
 
       const results = this._data.rows.filter(row =>
         [row.item, row.name].join(' ').toLowerCase().includes(query)
