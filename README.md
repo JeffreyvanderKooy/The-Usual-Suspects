@@ -55,3 +55,4 @@ Want to help make this app even better? Awesome! Feel free to:
 ## License
 
 This project is open-source and available under the [MIT License](LICENSE).
+

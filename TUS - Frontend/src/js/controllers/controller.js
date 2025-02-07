@@ -143,7 +143,7 @@ async function controlRefreshTable() {
   try {
     await model.fetchRaid(model.state.curRaid.raid);
 
-    tableView.renderRows(model.state.curRaid.rows);
+    tableView.renderRows(model.state.curRaid.rows).clearSearchInput();
   } catch (err) {
     modalView.error(err.message);
     console.error(err);

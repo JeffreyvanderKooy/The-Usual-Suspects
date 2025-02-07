@@ -17,12 +17,16 @@ class tableView {
         [row.item, row.name].join(' ').toLowerCase().includes(query)
       );
 
-      this._renderRows(results);
+      this.renderRows(results);
     });
   }
 
   addHandlerRefresh(handler) {
     $('#raid-table').on('click', '#refresh', handler);
+  }
+
+  clearSearchInput() {
+    $('#search').val('');
   }
 
   render(curRaid) {
@@ -48,6 +52,8 @@ class tableView {
     $('#raid-table tbody').html('');
 
     rows.sort(sortDate).forEach(this.addRow.bind(this));
+
+    return this;
   }
 
   addRow(row) {
