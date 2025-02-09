@@ -1,6 +1,8 @@
 const dbQuery = require('../database/dbQueries');
 
 const { capitalize } = require('../helpers/helper');
+const catchAsync = require('../helpers/catchAsync');
+const appError = require('../helpers/appError');
 
 exports.validateRaid = (req, res, next) => {
   const raid = req.body.raid || req.query.raid;
@@ -10,95 +12,85 @@ exports.validateRaid = (req, res, next) => {
     'molten_core',
     'ahn_qiraj',
   ];
+
   let message;
 
   if (!raid) message = 'Please enter a valid raid.';
   else if (!raidsAllowed.includes(raid))
     message = 'Selected raid is not supported.';
 
-  if (message) return res.status(400).json({ ok: false, message });
+  if (message) return next(new appError(message, 400));
 
   next();
 };
 
-exports.fetchRaid = async (req, res) => {
-  try {
-    // 1. validate raid
-    const raid = req.query.raid;
+exports.fetchRaid = catchAsync(async (req, res) => {
+  // 1. validate raid
+  const raid = req.query.raid;
 
-    // 2. get all items belonging to this raid
-    const rows = await dbQuery.getItems(raid);
+  // 2. get all items belonging to this raid
+  const rows = await dbQuery.getItems(raid);
 
-    // 3. response
-    res.json({ ok: true, data: { raid, rows } });
-  } catch (error) {
-    res.status(400).json({ ok: false, message: error.message });
-  }
-};
+  // 3. response
+  res.json({ ok: true, data: { raid, rows } });
+});
 
-exports.patchBonus = async (req, res) => {
-  try {
-    // 1. destructure req.body
-    const { id, raid, bonus } = req.body;
+exports.patchBonus = catchAsync(async (req, res) => {
+  // 1. destructure req.body
+  const { id, raid, bonus } = req.body;
 
-    // 2. check for missing parameters
-    if (!id) throw new Error('Missing parameter: ID!');
-    if (bonus < 0) throw new Error('Missing parameter: Bonus!');
+  // 2. check for missing parameters
+  if (!id) throw new appError('Missing parameter: ID!', 400);
+  if (bonus < 0 || !bonus) throw new appError('Missing parameter: Bonus!', 400);
 
-    // 3. update the "bonus" column in selected raid at id
-    const result = await dbQuery.incrementAttendance(id, raid, bonus);
+  // 3. update the "bonus" column in selected raid at id
+  const { rows } = await dbQuery.incrementAttendance(id, raid, bonus);
 
-    // 4. response
-    res.status(201).json({ ok: true, data: result });
-  } catch (error) {
-    res.status(400).json({ ok: false, message: error.message });
-  }
-};
+  if (rows.length === 0)
+    throw new appError(`No item found for given ID in ${raid}.`, 400);
 
-exports.reserveItem = async (req, res) => {
-  try {
-    // 1. destructure req.body
-    const { item, id, name, raid } = req.body;
+  // 4. response
+  res.status(201).json({ ok: true, data: rows });
+});
 
-    // 2. check for missing parameters
-    if (!item) throw new Error('Missing parameter: item!');
-    if (!id) throw new Error('Missing parameter: ID!');
-    if (!name) throw new Error('Missing parameter: name!');
+exports.reserveItem = catchAsync(async (req, res) => {
+  // 1. destructure req.body
+  const { item, id, name, raid } = req.body;
 
-    // 3. data to send to database
-    const data = {
-      item: capitalize(item),
-      id,
-      raid,
-      name: capitalize(name),
-    };
+  // 2. check for missing parameters
+  if (!item) throw new appError('Missing parameter: item!', 400);
+  if (!id) throw new appError('Missing parameter: ID!', 400);
+  if (!name) throw new appError('Missing parameter: name!', 400);
 
-    // 4. submit item returning the submitted item
-    const result = await dbQuery.submitItem(data);
+  // 3. data to send to database
+  const data = {
+    item: capitalize(item),
+    id,
+    raid,
+    name: capitalize(name),
+  };
 
-    res.status(201).json({ ok: true, data: result });
-  } catch (error) {
-    res.status(400).json({ ok: false, message: error.message });
-  }
-};
+  // 4. submit item returning the submitted item
+  const result = await dbQuery.submitItem(data);
 
-exports.deleteItem = async (req, res) => {
-  try {
-    // 1. get id from req.body
-    const id = +req.body.id;
+  res.status(201).json({ ok: true, data: result });
+});
 
-    // 2. validate the raid from req.body
-    const raid = req.body.raid;
+exports.deleteItem = catchAsync(async (req, res) => {
+  // 1. get id from req.body
+  const id = +req.body.id;
 
-    // 3. data to send to DB
-    const data = { id, raid };
+  // 2. validate the raid from req.body
+  const raid = req.body.raid;
 
-    // 4. delete the item returning the deleted item
-    const result = await dbQuery.deleteItem(data);
+  // 3. data to send to DB
+  const data = { id, raid };
 
-    // 5. response
-    res.status(202).json({ ok: true, data: result });
-  } catch (error) {
-    res.status(400).json({ ok: false, message: error.message });
-  }
-};
+  // 4. delete the item returning the deleted item
+  const result = await dbQuery.deleteItem(data);
+
+  if (!result) throw new appError('No item found for given ID', 400);
+
+  // 5. response
+  res.status(202).json({ ok: true, data: result });
+});

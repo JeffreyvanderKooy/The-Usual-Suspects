@@ -2,6 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
+const globalErrorHandeler = require('./src/controllers/errorControllers');
+const appError = require('./src/helpers/appError');
+
 const app = express();
 
 // MIDDLEWARE
@@ -20,5 +23,12 @@ const userRouter = require('./src/routes/userRoute');
 
 app.use('/api/v1/raids', raidRouter);
 app.use('/api/v1/users', userRouter);
+
+app.all('*', (req, res, next) => {
+  const message = `No path found for ${req.originalUrl}`;
+  next(new appError(message, 404));
+});
+
+app.use(globalErrorHandeler);
 
 module.exports = app;

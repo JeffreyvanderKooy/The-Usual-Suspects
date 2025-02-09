@@ -1,4 +1,5 @@
 const db = require('./db');
+const appError = require('../helpers/appError');
 
 async function incrementAttendance(id, raid, bonus) {
   // update the "bonus" column where id's match
@@ -126,9 +127,10 @@ async function getUser(name, pin) {
     const [user] = res.rows;
 
     // check if user exists
-    if (!user) throw new Error('No user found! Have you made an account yet?');
+    if (!user)
+      throw new appError('No user found! Have you made an account yet?', 400);
     // check if pins match
-    if (user.pin != pin) throw new Error('Wrong pin!');
+    if (user.pin != pin) throw new appError('Wrong pin!', 400);
 
     return user;
   } catch (err) {
@@ -145,7 +147,10 @@ async function insertUser(name, pin) {
 
   // if so throw error
   if (user.length > 0)
-    throw new Error('An account with this character name already exists!');
+    throw new appError(
+      'An account with this character name already exists!',
+      400
+    );
 
   // add new user into database
   const query = `

@@ -1,3 +1,5 @@
+const appError = require('../helpers/appError');
+
 function capitalize(str) {
   return str
     .toLowerCase()
@@ -7,25 +9,40 @@ function capitalize(str) {
 }
 
 function validateName(name) {
-  if (!name) return 'Please enter your ingame name.';
-  if (name.split(' ').length > 1) return 'Username must be one word.';
+  let message;
+
+  if (!name) message = 'Please enter your ingame name.';
+  if (name.split(' ').length > 1) message = 'Username must be one word.';
   if (name.split('').some(i => isFinite(i)))
-    return 'Username may not contain numbers.';
+    message = 'Username may not contain numbers.';
+
+  if (message) return new appError(message, 400);
+  else return false;
 }
 function validatePin(pin) {
-  if (!pin) return 'Please enter your pin.';
-  if (!isFinite(+pin)) return 'Only numbers are allowed for pin.';
-  if (pin.toString().trim().length !== 4)
-    return 'Pin must be 4 characters long.';
+  let message;
+
+  if (!isFinite(+pin)) message = 'Only numbers are allowed for a pin.';
+  if (pin?.toString().trim().length !== 4)
+    message = 'A pin must be 4 characters long.';
+  if (!pin) message = 'Please enter a pin.';
+
+  if (message) return new appError(message, 400);
+  else return false;
 }
 
 function validateRaid(raid) {
-  if (!raid) throw new Error('Please enter a valid raid.');
+  if (!raid) throw new appError('Please enter a valid raid.', 400);
 
-  const raidsAllowed = ['blackwing_lair', 'emerald_sanctum', 'molten_core'];
+  const raidsAllowed = [
+    'blackwing_lair',
+    'emerald_sanctum',
+    'molten_core',
+    'ahn_qiraj',
+  ];
 
   if (!raidsAllowed.includes(raid))
-    throw new Error('Selected raid is not supported.');
+    throw new appError('Selected raid is not supported.', 400);
 
   return raid;
 }
