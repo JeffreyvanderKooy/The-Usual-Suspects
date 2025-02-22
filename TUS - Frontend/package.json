@@ -30,6 +30,7 @@
     "dotenv": "^16.4.7",
     "jquery": "^3.7.1",
     "regenerator-runtime": "^0.14.1",
+    "socket.io-client": "^4.8.1",
     "swal": "^0.1.0",
     "sweetalert": "^2.1.2"
   }

@@ -1,5 +1,6 @@
 import { getJSON, validateInput } from '../helper';
 import { API_URL } from '../config';
+import socket from '../websocket/websocket';
 
 export const state = {
   curUser: { id: undefined, name: undefined, admin: false },

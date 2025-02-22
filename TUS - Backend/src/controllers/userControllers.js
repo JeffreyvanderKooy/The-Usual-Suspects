@@ -1,7 +1,7 @@
 const dbQuery = require('../database/dbQueries');
 
-const { validateName, validatePin } = require('../helpers/helper');
-const catchAsync = require('../helpers/catchAsync');
+const { validateName, validatePin } = require('../utils/helper');
+const catchAsync = require('../utils/catchAsync');
 
 exports.validateInfo = (req, res, next) => {
   // these functions return a error if it did not pass validation or return "false" if it did

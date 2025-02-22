@@ -1,8 +1,9 @@
 const dbQuery = require('../database/dbQueries');
 
-const { capitalize } = require('../helpers/helper');
-const catchAsync = require('../helpers/catchAsync');
-const appError = require('../helpers/appError');
+const { capitalize } = require('../utils/helper');
+const catchAsync = require('../utils/catchAsync');
+const appError = require('../utils/appError');
+const { emitEvent } = require('./eventController');
 
 exports.validateRaid = (req, res, next) => {
   const raid = req.body.raid || req.query.raid;
@@ -35,32 +36,36 @@ exports.fetchRaid = catchAsync(async (req, res) => {
   res.json({ ok: true, data: { raid, rows } });
 });
 
-exports.patchBonus = catchAsync(async (req, res) => {
+exports.patchBonus = catchAsync(async (req, res, next) => {
   // 1. destructure req.body
   const { id, raid, bonus } = req.body;
 
   // 2. check for missing parameters
-  if (!id) throw new appError('Missing parameter: ID!', 400);
-  if (bonus < 0 || !bonus) throw new appError('Missing parameter: Bonus!', 400);
+  if (!id) return next(new appError('Missing parameter: ID!', 400));
+  if (bonus < 0 || isNaN(bonus))
+    return next(new appError('Missing parameter: Bonus!', 400));
 
   // 3. update the "bonus" column in selected raid at id
   const { rows } = await dbQuery.incrementAttendance(id, raid, bonus);
 
   if (rows.length === 0)
-    throw new appError(`No item found for given ID in ${raid}.`, 400);
+    return next(new appError(`No item found for given ID in ${raid}.`, 400));
+
+  // 3A item patched
+  emitEvent('itemPatch', { ...rows[0], raid });
 
   // 4. response
   res.status(201).json({ ok: true, data: rows });
 });
 
-exports.reserveItem = catchAsync(async (req, res) => {
+exports.reserveItem = catchAsync(async (req, res, next) => {
   // 1. destructure req.body
   const { item, id, name, raid } = req.body;
 
   // 2. check for missing parameters
-  if (!item) throw new appError('Missing parameter: item!', 400);
-  if (!id) throw new appError('Missing parameter: ID!', 400);
-  if (!name) throw new appError('Missing parameter: name!', 400);
+  if (!item) return next(new appError('Missing parameter: item!', 400));
+  if (!id) return next(appError('Missing parameter: ID!', 400));
+  if (!name) return next(new appError('Missing parameter: name!', 400));
 
   // 3. data to send to database
   const data = {
@@ -73,10 +78,12 @@ exports.reserveItem = catchAsync(async (req, res) => {
   // 4. submit item returning the submitted item
   const result = await dbQuery.submitItem(data);
 
+  emitEvent('itemReserve', { ...result[0], raid });
+
   res.status(201).json({ ok: true, data: result });
 });
 
-exports.deleteItem = catchAsync(async (req, res) => {
+exports.deleteItem = catchAsync(async (req, res, next) => {
   // 1. get id from req.body
   const id = +req.body.id;
 
@@ -89,7 +96,10 @@ exports.deleteItem = catchAsync(async (req, res) => {
   // 4. delete the item returning the deleted item
   const result = await dbQuery.deleteItem(data);
 
-  if (!result) throw new appError('No item found for given ID', 400);
+  if (!result) return next(new appError('No item found for given ID', 400));
+
+  // 4A emit websocket event
+  emitEvent('itemDelete', { id, raid });
 
   // 5. response
   res.status(202).json({ ok: true, data: result });

@@ -1,4 +1,4 @@
-const appError = require('../helpers/appError');
+const appError = require('./appError');
 
 function capitalize(str) {
   return str

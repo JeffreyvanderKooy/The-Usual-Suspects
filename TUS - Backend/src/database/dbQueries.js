@@ -1,5 +1,5 @@
 const db = require('./db');
-const appError = require('../helpers/appError');
+const appError = require('../utils/appError');
 
 async function incrementAttendance(id, raid, bonus) {
   // update the "bonus" column where id's match

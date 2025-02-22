@@ -3,7 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 
 const globalErrorHandeler = require('./src/controllers/errorControllers');
-const appError = require('./src/helpers/appError');
+const appError = require('./src/utils/appError');
 
 const app = express();
 

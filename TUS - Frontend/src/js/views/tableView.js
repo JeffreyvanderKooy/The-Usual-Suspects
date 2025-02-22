@@ -57,9 +57,22 @@ class tableView {
   }
 
   addRow(row) {
+    if (!this._data) return;
+
     const markup = this._generateRowMarkup(row);
 
     $('#raid-table tbody').get(0).insertAdjacentHTML('afterbegin', markup);
+  }
+
+  updateRow(data) {
+    if (!$('table')) return;
+
+    $(`tr[data-player-id="${data.id}"] .bonus`).text(data.bonus * 10);
+  }
+
+  deleteRow(id) {
+    console.log('DELETING ROWs');
+    $(`tr[data-player-id="${id}"]`)?.remove();
   }
 
   _generateTableMarkup() {
@@ -95,7 +108,7 @@ class tableView {
                 <td>${data.name}</td>
                 <td>${data.item}</td>
                 <td>${data.formatted_date}</td>
-                <td>${data.bonus * 10 || 0}</td>
+                <td class="bonus">${data.bonus * 10 || 0}</td>
             </tr>`;
   }
 }

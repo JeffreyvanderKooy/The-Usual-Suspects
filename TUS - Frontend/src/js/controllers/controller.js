@@ -15,6 +15,8 @@ import tableView from '../views/tableView';
 
 import { HEADER_DELAY_MS } from '../config';
 
+import socket from '../websocket/websocket';
+
 async function controlSubmit(val) {
   try {
     modalView.loader(true);
@@ -70,6 +72,7 @@ async function controlFetchRaid(query) {
 }
 
 async function controlReserve(item) {
+  debugger;
   const { name, id } = model.state.curUser;
   const { raid } = model.state.curRaid;
 
@@ -83,7 +86,6 @@ async function controlReserve(item) {
 
     modalView.succes();
     reserveView.setPlaceholders(model.state.curRaid, model.state.curUser);
-    tableView.render(model.state.curRaid);
   } catch (err) {
     modalView.error(err.message);
     console.error(err);
@@ -107,7 +109,6 @@ async function controlDelete() {
 
     modalView.succes();
     reserveView.setPlaceholders(model.state.curRaid, model.state.curUser);
-    tableView.render(model.state.curRaid);
   } catch (err) {
     modalView.error(err.message);
     console.error(err);
@@ -128,9 +129,10 @@ async function controlAttendance(attendance) {
 
     if (!res.ok) throw new Error(res.message);
 
+    await model.fetchRaid(raid);
+
     modalView.succes();
     reserveView.setPlaceholders(model.state.curRaid, model.state.curUser);
-    tableView.render(model.state.curRaid);
   } catch (err) {
     modalView.error(err.message);
     console.error(err);
@@ -150,6 +152,28 @@ async function controlRefreshTable() {
   }
 }
 
+function addHandlerSocket(socket) {
+  socket.on('itemReserve', controlSocketReserve);
+  socket.on('itemDelete', controlSocketDelete);
+  socket.on('itemPatch', controlSocketPatch);
+}
+
+function controlSocketReserve(data) {
+  if (data.raid === model.state.curRaid.raid) console.log('PATCHING');
+  if (data.raid === model.state.curRaid.raid) {
+    tableView.deleteRow(data.id);
+    tableView.addRow(data);
+  }
+}
+
+function controlSocketDelete(data) {
+  if (data.raid === model.state.curRaid.raid) tableView.deleteRow(data.id);
+}
+
+function controlSocketPatch(data) {
+  if (data.raid === model.state.curRaid.raid) tableView.updateRow(data);
+}
+
 (async function init() {
   // adding event handlers
   loginView.addHandlerSubmit(controlSubmit);
@@ -159,6 +183,13 @@ async function controlRefreshTable() {
   reserveView.addHandlerDelete(controlDelete);
   reserveView.addHandlerAttendance(controlAttendance);
   tableView.addHandlerRefresh(controlRefreshTable);
+
+  socket.on('connect', () => addHandlerSocket(socket));
+
+  // model
+  //   .tryLoginUser()
+  //   .then(user => headerView.render(model.state.curUser))
+  //   .catch(loginView.render);
 
   loginView.render();
 })();
