@@ -159,7 +159,6 @@ function addHandlerSocket(socket) {
 }
 
 function controlSocketReserve(data) {
-  if (data.raid === model.state.curRaid.raid) console.log('PATCHING');
   if (data.raid === model.state.curRaid.raid) {
     tableView.deleteRow(data.id);
     tableView.addRow(data);
