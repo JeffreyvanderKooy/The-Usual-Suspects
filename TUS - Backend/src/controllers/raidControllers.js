@@ -52,7 +52,11 @@ exports.patchBonus = catchAsync(async (req, res, next) => {
     return next(new appError(`No item found for given ID in ${raid}.`, 400));
 
   // 3A item patched
-  emitEvent('itemPatch', { ...rows[0], raid });
+  emitEvent('itemPatch', {
+    ...rows[0],
+    raid,
+    rows: await dbQuery.getItems(raid),
+  });
 
   // 4. response
   res.status(201).json({ ok: true, data: rows });
@@ -78,7 +82,11 @@ exports.reserveItem = catchAsync(async (req, res, next) => {
   // 4. submit item returning the submitted item
   const result = await dbQuery.submitItem(data);
 
-  emitEvent('itemReserve', { ...result[0], raid });
+  emitEvent('itemReserve', {
+    ...result[0],
+    raid,
+    rows: await dbQuery.getItems(raid),
+  });
 
   res.status(201).json({ ok: true, data: result });
 });
@@ -99,7 +107,7 @@ exports.deleteItem = catchAsync(async (req, res, next) => {
   if (!result) return next(new appError('No item found for given ID', 400));
 
   // 4A emit websocket event
-  emitEvent('itemDelete', { id, raid });
+  emitEvent('itemDelete', { id, raid, rows: await dbQuery.getItems(raid) });
 
   // 5. response
   res.status(202).json({ ok: true, data: result });

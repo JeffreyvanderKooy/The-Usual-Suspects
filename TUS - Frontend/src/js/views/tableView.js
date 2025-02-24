@@ -5,24 +5,24 @@ import { RAID_DATA } from '../config';
 class tableView {
   _data; // eg curRaid
 
-  constructor() {
-    $('body').on('keyup', '#search', e => {
-      if (!this._data) return;
-
-      const query = $(e.target).val().toLowerCase();
-
-      if (!query) return this.renderRows(this._data.rows);
-
-      const results = this._data.rows.filter(row =>
-        [row.item, row.name].join(' ').toLowerCase().includes(query)
-      );
-
-      this.renderRows(results);
-    });
-  }
-
   addHandlerRefresh(handler) {
     $('#raid-table').on('click', '#refresh', handler);
+  }
+
+  addHandlerSearch(handler) {
+    $('body').on('keyup', '#search', () => handler());
+  }
+
+  searchAndRender(rows) {
+    const query = $('#search').val().toLowerCase().trim();
+
+    if (!query) return this.renderRows(rows);
+
+    const results = rows.filter(row =>
+      [row.item, row.name].join(' ').toLowerCase().includes(query)
+    );
+
+    this.renderRows(results);
   }
 
   clearSearchInput() {
@@ -71,7 +71,6 @@ class tableView {
   }
 
   deleteRow(id) {
-    console.log('DELETING ROWs');
     $(`tr[data-player-id="${id}"]`)?.remove();
   }
 

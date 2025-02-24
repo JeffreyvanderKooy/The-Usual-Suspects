@@ -152,25 +152,26 @@ async function controlRefreshTable() {
   }
 }
 
+function controlSearchAndRender(rows = model.state.curRaid.rows) {
+  tableView.searchAndRender(rows);
+}
+
 function addHandlerSocket(socket) {
   socket.on('itemReserve', controlSocketReserve);
   socket.on('itemDelete', controlSocketDelete);
   socket.on('itemPatch', controlSocketPatch);
 }
 
-function controlSocketReserve(data) {
-  if (data.raid === model.state.curRaid.raid) {
-    tableView.deleteRow(data.id);
-    tableView.addRow(data);
-  }
+async function controlSocketReserve(data) {
+  if (data.raid === model.state.curRaid.raid) controlSearchAndRender(data.rows);
 }
 
-function controlSocketDelete(data) {
-  if (data.raid === model.state.curRaid.raid) tableView.deleteRow(data.id);
+async function controlSocketDelete(data) {
+  if (data.raid === model.state.curRaid.raid) controlSearchAndRender(data.rows);
 }
 
-function controlSocketPatch(data) {
-  if (data.raid === model.state.curRaid.raid) tableView.updateRow(data);
+async function controlSocketPatch(data) {
+  if (data.raid === model.state.curRaid.raid) controlSearchAndRender(data.rows);
 }
 
 (async function init() {
@@ -182,6 +183,7 @@ function controlSocketPatch(data) {
   reserveView.addHandlerDelete(controlDelete);
   reserveView.addHandlerAttendance(controlAttendance);
   tableView.addHandlerRefresh(controlRefreshTable);
+  tableView.addHandlerSearch(controlSearchAndRender);
 
   socket.on('connect', () => addHandlerSocket(socket));
 
