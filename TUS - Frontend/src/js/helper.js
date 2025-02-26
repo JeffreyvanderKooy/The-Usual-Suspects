@@ -10,6 +10,9 @@ export async function getJSON(url, method = 'GET', body) {
 
   const data = await res.json();
 
+  // Incase API limit is reached
+  if (data.error) throw new Error(data.error);
+
   return data;
 }
 
