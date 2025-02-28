@@ -72,7 +72,6 @@ async function controlFetchRaid(query) {
 }
 
 async function controlReserve(item) {
-  debugger;
   const { name, id } = model.state.curUser;
   const { raid } = model.state.curRaid;
 
@@ -141,6 +140,19 @@ async function controlAttendance(attendance) {
   }
 }
 
+async function controlLogout() {
+  try {
+    const res = await model.logoutCurUser();
+
+    if (!res.ok) throw new Error(res.message);
+
+    loginView.render();
+  } catch (error) {
+    console.error(err);
+    modalView.error(err.message);
+  }
+}
+
 async function controlRefreshTable() {
   try {
     await model.fetchRaid(model.state.curRaid.raid);
@@ -157,27 +169,19 @@ function controlSearchAndRender(rows = model.state.curRaid.rows) {
 }
 
 function addHandlerSocket(socket) {
-  socket.on('itemReserve', controlSocketReserve);
-  socket.on('itemDelete', controlSocketDelete);
-  socket.on('itemPatch', controlSocketPatch);
+  socket.on('itemReserve', controlSocketUpdate);
+  socket.on('itemDelete', controlSocketUpdate);
+  socket.on('itemPatch', controlSocketUpdate);
 }
 
-async function controlSocketReserve(data) {
-  if (data.raid === model.state.curRaid.raid) controlSearchAndRender(data.rows);
-}
-
-async function controlSocketDelete(data) {
-  if (data.raid === model.state.curRaid.raid) controlSearchAndRender(data.rows);
-}
-
-async function controlSocketPatch(data) {
+function controlSocketUpdate(data) {
   if (data.raid === model.state.curRaid.raid) controlSearchAndRender(data.rows);
 }
 
 (async function init() {
   // adding event handlers
   loginView.addHandlerSubmit(controlSubmit);
-  headerView.addHandlerLogout(loginView.render, loginView);
+  headerView.addHandlerLogout(controlLogout);
   headerView.addHandlerFetchRaid(controlFetchRaid);
   reserveView.addHandlerReserve(controlReserve);
   reserveView.addHandlerDelete(controlDelete);
@@ -187,10 +191,11 @@ async function controlSocketPatch(data) {
 
   socket.on('connect', () => addHandlerSocket(socket));
 
-  // model
-  //   .tryLoginUser()
-  //   .then(user => headerView.render(model.state.curUser))
-  //   .catch(loginView.render);
-
-  loginView.render();
+  model
+    .tryLoginUser()
+    .then(_ => headerView.render(model.state.curUser))
+    .catch(err => {
+      console.log(err);
+      loginView.render();
+    });
 })();

@@ -20,6 +20,10 @@ class LoginView {
   }
 
   render(message) {
+    // clear current content on page
+    $('header').html('');
+    $('#raid-table').html('');
+
     const content = document.createElement('div');
 
     const markup = `<div class="d-flex justify-content-center flex-column gap-3 w-75">

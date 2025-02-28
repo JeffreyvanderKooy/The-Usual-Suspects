@@ -169,6 +169,25 @@ async function insertUser(name, pin) {
   }
 }
 
+// retrives 1 user by ID
+async function getUserById(id) {
+  const query = `
+  SELECT id, name, admin FROM users
+  WHERE id = $1;
+  `;
+
+  const values = [id];
+
+  try {
+    const res = await db.query(query, values);
+    const [user] = res.rows;
+
+    return user;
+  } catch (err) {
+    throw err;
+  }
+}
+
 module.exports = {
   incrementAttendance,
   deleteItem,
@@ -177,4 +196,5 @@ module.exports = {
   getUsers,
   getUser,
   insertUser,
+  getUserById,
 };

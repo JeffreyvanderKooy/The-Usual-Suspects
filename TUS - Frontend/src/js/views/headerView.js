@@ -10,10 +10,8 @@ class HeaderView extends View {
   }
 
   // triggered when clicked on "Change User" button
-  addHandlerLogout(handler, view) {
-    $('body').on('click', '#logout', () =>
-      handler.call(view, 'Change Character')
-    );
+  addHandlerLogout(handler) {
+    $('body').on('click', '#logout', handler);
   }
 
   // triggered when clicked on a raid button
@@ -60,7 +58,7 @@ class HeaderView extends View {
     </div>
       <h5>
         <button class="btn bg-secondary-subtle fs-5" id="logout">
-          Change Character
+          Logout
           <i class="bi bi-person"></i>
         </button>
       </h5>

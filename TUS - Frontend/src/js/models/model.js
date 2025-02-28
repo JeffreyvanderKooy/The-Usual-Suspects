@@ -17,6 +17,8 @@ export async function login(query, val) {
 
     const res = await getJSON(`${API_URL}/api/v1/users/${path}`, 'POST', body);
 
+    if (!res.ok) throw new Error(res.message);
+
     updateCurUser(res.data);
 
     return res;
@@ -29,9 +31,25 @@ export async function fetchRaid(query) {
   try {
     const res = await getJSON(`${API_URL}/api/v1/raids/raid?raid=${query}`);
 
+    if (!res.ok) throw new Error(res.message);
+
     updateCurRaid(res.data);
 
     return res;
+  } catch (err) {
+    throw err;
+  }
+}
+
+export async function tryLoginUser() {
+  try {
+    const res = await getJSON(`${API_URL}/api/v1/users/login/cookie`);
+
+    if (!res.ok) throw new Error(res.message);
+
+    updateCurUser(res.data.user);
+
+    return res.data.user;
   } catch (err) {
     throw err;
   }
@@ -73,6 +91,15 @@ export async function deleteReserve(query) {
 
     if (!res.ok) throw new Error(res.message);
 
+    return res;
+  } catch (err) {
+    throw err;
+  }
+}
+
+export async function logoutCurUser() {
+  try {
+    const res = await getJSON(`${API_URL}/api/v1/users/logout`);
     return res;
   } catch (err) {
     throw err;

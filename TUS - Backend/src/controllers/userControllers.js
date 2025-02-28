@@ -1,6 +1,7 @@
 const dbQuery = require('../database/dbQueries');
 
 const { validateName, validatePin } = require('../utils/helper');
+const { cookieOptions, token } = require('./authController');
 const catchAsync = require('../utils/catchAsync');
 
 exports.validateInfo = (req, res, next) => {
@@ -31,6 +32,9 @@ exports.loginUser = catchAsync(async (req, res) => {
 
   // 2A. remove pin from response data
   delete user.pin;
+
+  // 2B. Send a cookie with the login
+  res.cookie('jwt', token(user.id), cookieOptions);
 
   // 3. response
   res.json({ ok: true, data: user });
