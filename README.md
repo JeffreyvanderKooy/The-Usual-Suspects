@@ -19,6 +19,7 @@
 - **PostgreSQL** – Where we store all your data — like your character info and raid history.
 - **Express** – The framework that keeps everything nice and tidy on the server side.
 - **Websocket** – For real time updates between logged in users.
+- **JWT Authorization** – To secure user data and persist login sessions.
 
 ### Frontend
 
