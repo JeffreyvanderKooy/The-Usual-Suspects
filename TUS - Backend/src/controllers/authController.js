@@ -55,6 +55,8 @@ exports.loginCookie = catchAsync(async (req, res, next) => {
 });
 
 exports.logout = (req, res) => {
+  const options = { ...cookieOptions };
+  delete options.expires;
   res.clearCookie('jwt');
   res.status(203).json({ ok: true });
 };
