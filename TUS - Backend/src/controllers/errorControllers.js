@@ -11,7 +11,18 @@ function sendErrorDev(err, res) {
 }
 
 function sendErrorProd(err, res) {
-  res.status(err.statusCode).json({ ok: false, message: err.message });
+  if (err.isOperational)
+    res.status(err.statusCode).json({ ok: false, message: err.message });
+  else {
+    console.error(err);
+
+    res
+      .status(500)
+      .json({
+        ok: false,
+        message: 'Oops! Something went wrong, please try again later.',
+      });
+  }
 }
 
 module.exports = (err, req, res, next) => {
