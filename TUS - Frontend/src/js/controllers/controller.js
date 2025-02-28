@@ -194,8 +194,5 @@ function controlSocketUpdate(data) {
   model
     .tryLoginUser()
     .then(_ => headerView.render(model.state.curUser))
-    .catch(err => {
-      console.log(err);
-      loginView.render();
-    });
+    .catch(_ => loginView.render());
 })();
