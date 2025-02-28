@@ -3,6 +3,7 @@ export const API_URL =
     ? 'http://localhost:3000'
     : 'https://usual-suspects.onrender.com';
 export const HEADER_DELAY_MS = 1000;
+export const LOGOUT_DELAY_MS = 2000;
 
 export const RAID_DATA = {
   blackwing_lair: { banned: [] },

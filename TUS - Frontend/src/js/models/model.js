@@ -1,6 +1,6 @@
 import { getJSON, validateInput } from '../helper';
 import { API_URL } from '../config';
-import socket from '../websocket/websocket';
+import { capitalize } from '../helper';
 
 export const state = {
   curUser: { id: undefined, name: undefined, admin: false },
@@ -107,6 +107,7 @@ export async function logoutCurUser() {
 }
 
 function updateCurUser(newUser) {
+  newUser.name = capitalize(newUser.name);
   state.curUser = newUser;
 }
 

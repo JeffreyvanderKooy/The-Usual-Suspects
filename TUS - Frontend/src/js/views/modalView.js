@@ -1,5 +1,6 @@
 import swal from 'sweetalert';
 import $ from 'jquery';
+import { capitalize } from '../helper';
 
 class modalView {
   warning(message = 'Oops! Something went wrong.') {
@@ -22,8 +23,8 @@ class modalView {
     });
   }
 
-  succes() {
-    swal({ icon: 'success' });
+  succes(message = ' ') {
+    swal({ icon: 'success', title: message });
   }
 
   loader(bool) {

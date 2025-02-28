@@ -13,7 +13,7 @@ import modalView from '../views/modalView';
 import reserveView from '../views/reserveView';
 import tableView from '../views/tableView';
 
-import { HEADER_DELAY_MS } from '../config';
+import { HEADER_DELAY_MS, LOGOUT_DELAY_MS } from '../config';
 
 import socket from '../websocket/websocket';
 
@@ -30,7 +30,7 @@ async function controlSubmit(val) {
     if (!res.ok) throw new Error(res.message);
 
     // small succes message
-    modalView.succes();
+    modalView.succes(`Welcome ${model.state.curUser.name}`);
 
     // render the page
     setTimeout(() => {
@@ -83,7 +83,7 @@ async function controlReserve(item) {
     await model.reserve(query);
     await model.fetchRaid(raid);
 
-    modalView.succes();
+    modalView.succes('Item reserved!');
     reserveView.setPlaceholders(model.state.curRaid, model.state.curUser);
   } catch (err) {
     modalView.error(err.message);
@@ -106,7 +106,7 @@ async function controlDelete() {
 
     await model.fetchRaid(raid);
 
-    modalView.succes();
+    modalView.succes(`Item succesfully deleted.`);
     reserveView.setPlaceholders(model.state.curRaid, model.state.curUser);
   } catch (err) {
     modalView.error(err.message);
@@ -130,7 +130,7 @@ async function controlAttendance(attendance) {
 
     await model.fetchRaid(raid);
 
-    modalView.succes();
+    modalView.succes('Attendance updated!');
     reserveView.setPlaceholders(model.state.curRaid, model.state.curUser);
   } catch (err) {
     modalView.error(err.message);
@@ -146,7 +146,8 @@ async function controlLogout() {
 
     if (!res.ok) throw new Error(res.message);
 
-    loginView.render();
+    modalView.succes('Succesfully logged out.');
+    setTimeout(() => loginView.render(), LOGOUT_DELAY_MS);
   } catch (error) {
     console.error(err);
     modalView.error(err.message);
@@ -193,6 +194,10 @@ function controlSocketUpdate(data) {
 
   model
     .tryLoginUser()
-    .then(_ => headerView.render(model.state.curUser))
-    .catch(_ => loginView.render());
+    .then(_ => {
+      headerView.render(model.state.curUser);
+      modalView.succes(`Welcome ${model.state.curUser.name}`);
+    })
+    .catch(_ => loginView.render())
+    .finally(_ => modalView.loader(false));
 })();

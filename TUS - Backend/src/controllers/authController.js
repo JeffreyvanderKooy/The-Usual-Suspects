@@ -10,10 +10,12 @@ const cookieExpiration = new Date(Date.now() + 90 * 24 * 60 * 1000);
 const cookieOptions = {
   httpOnly: true,
   expires: cookieExpiration,
-  sameSite: 'None',
 };
 
-if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+if (process.env.NODE_ENV === 'production') {
+  cookieOptions.sameSite = 'None';
+  cookieOptions.secure = true;
+}
 
 exports.cookieOptions = cookieOptions;
 

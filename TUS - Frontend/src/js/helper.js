@@ -19,7 +19,8 @@ export async function getJSON(url, method = 'GET', body) {
 export function capitalize(str) {
   return str
     .toLowerCase()
-    .split('_')
+    .replaceAll('_', ' ')
+    .split(' ')
     .map(item => item.replace(item[0], item[0].toUpperCase()))
     .join(' ');
 }
