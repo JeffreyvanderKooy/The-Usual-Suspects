@@ -47,7 +47,6 @@ class reserveView {
   }
 
   setPlaceholders(curRaid, curUser) {
-    console.log(curUser);
     const myItem = curRaid.rows.find(row => row.id == curUser.id);
     $('#reserve').attr('placeholder', myItem?.item || 'none');
     $('#attendance').val(myItem?.bonus || '0');

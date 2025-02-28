@@ -106,11 +106,11 @@ export async function logoutCurUser() {
   }
 }
 
-function updateCurUser(newUser) {
+export function updateCurUser(newUser) {
   newUser.name = capitalize(newUser.name);
   state.curUser = newUser;
 }
 
-function updateCurRaid(newRaid) {
+export function updateCurRaid(newRaid) {
   state.curRaid = newRaid;
 }

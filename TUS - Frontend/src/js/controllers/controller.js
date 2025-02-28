@@ -176,7 +176,10 @@ function addHandlerSocket(socket) {
 }
 
 function controlSocketUpdate(data) {
-  if (data.raid === model.state.curRaid.raid) controlSearchAndRender(data.rows);
+  if (data.raid === model.state.curRaid.raid) {
+    model.updateCurRaid({ rows: data.rows, raid: model.state.curRaid.raid });
+    controlSearchAndRender(data.rows);
+  }
 }
 
 (async function init() {
