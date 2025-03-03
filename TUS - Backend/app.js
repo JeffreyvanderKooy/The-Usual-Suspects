@@ -24,11 +24,11 @@ app.use(
 );
 
 // limiter setup
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  limit: 65, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
-  message: { error: 'Too many requests, please try again in 15 minutes.' },
-});
+// const limiter = rateLimit({
+//   windowMs: 15 * 60 * 1000, // 15 minutes
+//   limit: 65, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+//   message: { error: 'Too many requests, please try again in 15 minutes.' },
+// });
 
 // mounting limiter
 app.use(limiter);
