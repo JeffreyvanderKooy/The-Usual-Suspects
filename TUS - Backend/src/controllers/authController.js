@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const { getUserById } = require('../database/dbQueries');
 
 // cookie expires in 90 days
-const cookieExpiration = new Date(Date.now() + 90 * 24 * 60 * 1000);
+const cookieExpiration = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000);
 
 // cookie options
 const cookieOptions = {
