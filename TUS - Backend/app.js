@@ -14,12 +14,6 @@ const app = express();
 
 app.set('trust proxy', true); // Fix IP detection on Render
 
-app.use((req, res, next) => {
-  console.log('req.ip:', req.ip);
-  console.log('X-Forwarded-For:', req.headers['x-forwarded-for']);
-  next();
-});
-
 // MIDDLEWARE
 
 // cors
