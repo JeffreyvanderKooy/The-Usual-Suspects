@@ -12,7 +12,13 @@ const appError = require('./src/utils/appError');
 
 const app = express();
 
-app.set('trust proxy', 1); // Fix IP detection on Render
+app.set('trust proxy', true); // Fix IP detection on Render
+
+app.use((req, res, next) => {
+  console.log('req.ip:', req.ip);
+  console.log('X-Forwarded-For:', req.headers['x-forwarded-for']);
+  next();
+});
 
 // MIDDLEWARE
 
@@ -30,12 +36,6 @@ const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
   message: { error: 'Too many requests, please try again in 15 minutes.' },
-});
-
-app.use((req, res, next) => {
-  console.log(req.ip);
-
-  next();
 });
 
 // mounting limiter
