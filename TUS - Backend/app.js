@@ -32,6 +32,12 @@ const limiter = rateLimit({
   message: { error: 'Too many requests, please try again in 15 minutes.' },
 });
 
+app.use((req, res, next) => {
+  console.log(req.ip);
+
+  next();
+});
+
 // mounting limiter
 app.use(limiter);
 
