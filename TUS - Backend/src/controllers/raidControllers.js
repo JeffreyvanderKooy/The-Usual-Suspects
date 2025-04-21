@@ -1,3 +1,4 @@
+// Imports
 const dbQuery = require('../database/dbQueries');
 
 const { capitalize } = require('../utils/helper');
@@ -5,6 +6,7 @@ const catchAsync = require('../utils/catchAsync');
 const appError = require('../utils/appError');
 const { emitEvent } = require('./eventController');
 
+// Checks if given "raid" is supported
 exports.validateRaid = (req, res, next) => {
   const raid = req.body.raid || req.query.raid;
   const raidsAllowed = [
@@ -25,6 +27,7 @@ exports.validateRaid = (req, res, next) => {
   next();
 };
 
+// Fetches all data for given raid
 exports.fetchRaid = catchAsync(async (req, res) => {
   // 1. validate raid
   const raid = req.query.raid;
@@ -36,6 +39,7 @@ exports.fetchRaid = catchAsync(async (req, res) => {
   res.json({ ok: true, data: { raid, rows } });
 });
 
+// Increments or decrements the "bonus" field
 exports.patchBonus = catchAsync(async (req, res, next) => {
   // 1. destructure req.body
   const { id, raid, bonus } = req.body;
@@ -91,6 +95,7 @@ exports.reserveItem = catchAsync(async (req, res, next) => {
   res.status(201).json({ ok: true, data: result });
 });
 
+// Deletes a item from given raid
 exports.deleteItem = catchAsync(async (req, res, next) => {
   // 1. get id from req.body
   const id = +req.body.id;

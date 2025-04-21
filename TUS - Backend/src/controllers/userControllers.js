@@ -1,11 +1,12 @@
+// Imports...
 const dbQuery = require('../database/dbQueries');
 
 const { validateName, validatePin } = require('../utils/helper');
 const { cookieOptions, token } = require('./authController');
 const catchAsync = require('../utils/catchAsync');
 
+// these functions return a error if it did not pass validation or return "false" if it did
 exports.validateInfo = (req, res, next) => {
-  // these functions return a error if it did not pass validation or return "false" if it did
   const err1 = validateName(req.body.name);
   const err2 = validatePin(req.body.pin);
 
@@ -15,6 +16,7 @@ exports.validateInfo = (req, res, next) => {
   next();
 };
 
+// Fetches all users from DB
 exports.fetchUsers = catchAsync(async (req, res) => {
   // 1. retrieve all users form DB
   const users = await dbQuery.getUsers();
@@ -23,6 +25,7 @@ exports.fetchUsers = catchAsync(async (req, res) => {
   res.json({ ok: true, data: users });
 });
 
+// Logs in a single user based on name and pin
 exports.loginUser = catchAsync(async (req, res) => {
   // 1. desctructure req.body
   const { name, pin } = req.body;
@@ -40,6 +43,7 @@ exports.loginUser = catchAsync(async (req, res) => {
   res.json({ ok: true, data: user });
 });
 
+// Registers a new user in the database
 exports.registerUser = catchAsync(async (req, res) => {
   // 1. desctructure req.body
   const { name, pin } = req.body;

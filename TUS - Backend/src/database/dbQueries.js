@@ -1,6 +1,8 @@
+// Imports
 const db = require('./db');
 const appError = require('../utils/appError');
 
+// Increment OR decrements the "bonus" field in a raid with given ID
 async function incrementAttendance(id, raid, bonus) {
   // update the "bonus" column where id's match
   const query = `
@@ -28,6 +30,7 @@ async function incrementAttendance(id, raid, bonus) {
   }
 }
 
+// Deletes a item form given raid
 async function deleteItem(data) {
   const { raid, id } = data;
 
