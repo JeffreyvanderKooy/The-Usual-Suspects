@@ -1,3 +1,4 @@
+// # ________________________________CONFIG FOR WEB SOCKET______________________________________ # //
 const app = require('../../app');
 const http = require('http');
 const { Server } = require('socket.io');

@@ -1,3 +1,4 @@
+// # ________________________________GLOBAL ERROR HANDLER______________________________________ # //
 function sendErrorDev(err, res) {
   if (err.isOperational)
     res.status(err.statusCode).json({ ok: false, message: err.message });

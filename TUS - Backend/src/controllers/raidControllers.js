@@ -1,4 +1,4 @@
-// Imports
+// # ________________________________IMPORTS...______________________________________ # //
 const dbQuery = require('../database/dbQueries');
 
 const { capitalize } = require('../utils/helper');
@@ -6,9 +6,13 @@ const catchAsync = require('../utils/catchAsync');
 const appError = require('../utils/appError');
 const { emitEvent } = require('./eventController');
 
+// # ________________________________MIDDLEWARE______________________________________ # //
+
 // Checks if given "raid" is supported
 exports.validateRaid = (req, res, next) => {
-  const raid = req.body.raid || req.query.raid;
+  const raid = req.body.raid || req.query.raid; // Extract raids from payload
+
+  // ALlowed raids to loop over
   const raidsAllowed = [
     'blackwing_lair',
     'emerald_sanctum',
@@ -16,16 +20,24 @@ exports.validateRaid = (req, res, next) => {
     'ahn_qiraj',
   ];
 
+  // Define message as empty var
   let message;
 
+  // No raid found
   if (!raid) message = 'Please enter a valid raid.';
+
+  // Raid is not supported
   else if (!raidsAllowed.includes(raid))
     message = 'Selected raid is not supported.';
 
+  // Message is not undefined, throw an error containing the message
   if (message) return next(new appError(message, 400));
 
+  // No error, next()
   next();
 };
+
+// # ________________________________RAID ROUTE HANDLERS______________________________________ # //
 
 // Fetches all data for given raid
 exports.fetchRaid = catchAsync(async (req, res) => {
@@ -52,10 +64,11 @@ exports.patchBonus = catchAsync(async (req, res, next) => {
   // 3. update the "bonus" column in selected raid at id
   const { rows } = await dbQuery.incrementAttendance(id, raid, bonus);
 
+  // No item couldnt be find with given ID
   if (rows.length === 0)
     return next(new appError(`No item found for given ID in ${raid}.`, 400));
 
-  // 3A item patched
+  // 3A item patched, emit event to frontend for live updating
   emitEvent('itemPatch', {
     ...rows[0],
     raid,
@@ -66,6 +79,7 @@ exports.patchBonus = catchAsync(async (req, res, next) => {
   res.status(201).json({ ok: true, data: rows });
 });
 
+// "Reserves" an item from given raid, inserting it into the database
 exports.reserveItem = catchAsync(async (req, res, next) => {
   // 1. destructure req.body
   const { item, id, name, raid } = req.body;
@@ -86,12 +100,14 @@ exports.reserveItem = catchAsync(async (req, res, next) => {
   // 4. submit item returning the submitted item
   const result = await dbQuery.submitItem(data);
 
+  // 5. Emit Websocket event to frontend for live update
   emitEvent('itemReserve', {
     ...result[0],
     raid,
     rows: await dbQuery.getItems(raid),
   });
 
+  // 6. Response
   res.status(201).json({ ok: true, data: result });
 });
 
@@ -106,12 +122,11 @@ exports.deleteItem = catchAsync(async (req, res, next) => {
   // 3. data to send to DB
   const data = { id, raid };
 
-  // 4. delete the item returning the deleted item
+  // 4. delete the item returning the deleted item, throws error if no item was found to delete
   const result = await dbQuery.deleteItem(data);
-
   if (!result) return next(new appError('No item found for given ID', 400));
 
-  // 4A emit websocket event
+  // 4A emit websocket event for live update to frontend
   emitEvent('itemDelete', { id, raid, rows: await dbQuery.getItems(raid) });
 
   // 5. response

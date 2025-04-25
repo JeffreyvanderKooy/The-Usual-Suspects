@@ -1,20 +1,21 @@
-// Imports...
+// # ________________________________IMPORTS...______________________________________ # //
 const dbQuery = require('../database/dbQueries');
-
 const { validateName, validatePin } = require('../utils/helper');
 const { cookieOptions, token } = require('./authController');
 const catchAsync = require('../utils/catchAsync');
 
-// these functions return a error if it did not pass validation or return "false" if it did
+// # ________________________________MIDDLEWARE______________________________________ # //
 exports.validateInfo = (req, res, next) => {
+  // these functions return a error if it did not pass validation or return "false" if it did
   const err1 = validateName(req.body.name);
   const err2 = validatePin(req.body.pin);
-
   if (err1) return next(err1);
   if (err2) return next(err2);
 
   next();
 };
+
+// # ________________________________USER ROUTE HANDLERS______________________________________ # //
 
 // Fetches all users from DB
 exports.fetchUsers = catchAsync(async (req, res) => {
@@ -37,7 +38,7 @@ exports.loginUser = catchAsync(async (req, res) => {
   delete user.pin;
 
   // 2B. Send a cookie with the login
-  res.cookie('jwt', token(user.id), cookieOptions);
+  res.cookie('jwt', token(user.id), cookieOptions());
 
   // 3. response
   res.json({ ok: true, data: user });

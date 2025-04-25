@@ -1,8 +1,17 @@
-// Imports
+// # ________________________________IMPORTS...______________________________________ # //
 const db = require('./db');
 const appError = require('../utils/appError');
 
-// Increment OR decrements the "bonus" field in a raid with given ID
+// # ________________________________DB QUERIES______________________________________ # //
+
+/**
+ * 
+ * @param {String} id User ID
+ * @param {String} raid Validated raid
+ * @param {Number} bonus New bonus value to insert
+ * @returns {Object} Response object from Database containing row that was updated
+ * @description Updated the "attendance" of an users reserved item in given raid
+ */
 async function incrementAttendance(id, raid, bonus) {
   // update the "bonus" column where id's match
   const query = `
@@ -30,7 +39,12 @@ async function incrementAttendance(id, raid, bonus) {
   }
 }
 
-// Deletes a item form given raid
+/**
+ * 
+ * @param {Object} data Object containing "raid" to remove from and userID 
+ * @returns {Number} 1 if query was succesfully and item was deleted, 0 if no item was deleted
+ * @description Removes an item from the given "raid"
+ */
 async function deleteItem(data) {
   const { raid, id } = data;
 
@@ -51,7 +65,12 @@ async function deleteItem(data) {
   }
 }
 
-// submit a item to reserve to database
+/**
+ * 
+ * @param {Object} data Object containg "id", "item", "name", "raid" 
+ * @returns {Object} New row inserted into the database for given item
+ * @description Inserts a new item in the given "raid" table
+ */
 async function submitItem(data) {
   const { id, item, name, raid } = data;
 
@@ -79,7 +98,11 @@ async function submitItem(data) {
   }
 }
 
-// get items for given raid from database
+/**
+ * 
+ * @param {String} raid Raid to select all items from 
+ * @returns {Array<Object>} an array containing all reserved items
+ */
 async function getItems(raid) {
   // retrieves all items from database for given raid
   const query = `
@@ -100,7 +123,10 @@ async function getItems(raid) {
   }
 }
 
-// Fetches all users from database
+/**
+ * 
+ * @returns {Array<Object>} Array containing all registered users
+ */
 async function getUsers() {
   // select all the users returning everything except their PIN
   const query = 'SELECT id, name, admin FROM users;';
@@ -113,7 +139,12 @@ async function getUsers() {
   }
 }
 
-// fetches a single user from database
+/**
+ * 
+ * @param {String} name users name
+ * @param {String} pin users pin
+ * @returns {Object} Object containing users info
+ */
 async function getUser(name, pin) {
   // get the user info for given name
   const query = `
@@ -141,7 +172,12 @@ async function getUser(name, pin) {
   }
 }
 
-// inserts a new user into the database
+/**
+ * 
+ * @param {String} name Users name
+ * @param {String} pin Users pin
+ * @returns {Object} Returns the new user
+ */
 async function insertUser(name, pin) {
   // check if there already is a user with this name
   const { rows: user } = await db.query('SELECT * FROM users WHERE name = $1', [
@@ -172,7 +208,11 @@ async function insertUser(name, pin) {
   }
 }
 
-// retrives 1 user by ID
+/**
+ * 
+ * @param {String} id ID to search for
+ * @returns {Object} A single user matching the ID, undefined if none
+ */
 async function getUserById(id) {
   const query = `
   SELECT id, name, admin FROM users
@@ -191,6 +231,7 @@ async function getUserById(id) {
   }
 }
 
+// Export the handlers...
 module.exports = {
   incrementAttendance,
   deleteItem,

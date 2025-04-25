@@ -1,3 +1,4 @@
+// # ________________________________IMPORTS...______________________________________ # //
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -14,7 +15,7 @@ const app = express();
 
 app.set('trust proxy', true); // Fix IP detection on Render
 
-// MIDDLEWARE
+// # ________________________________GLOBAL MIDDLEWARE STACK______________________________________ # //
 
 // cors
 app.use(
@@ -48,11 +49,15 @@ app.use(xss());
 // prevent parameter polution
 app.use(hpp());
 
+// # ________________________________ROUTING______________________________________ # //
+
 const raidRouter = require('./src/routes/raidRoute');
 const userRouter = require('./src/routes/userRoute');
 
 app.use('/api/v1/raids', raidRouter);
 app.use('/api/v1/users', userRouter);
+
+// # ________________________________GLOBAL ERROR HANDLER REDIRECT______________________________________ # //
 
 app.all('*', (req, res, next) => {
   const message = `No path found for ${req.originalUrl}`;
