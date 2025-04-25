@@ -1,5 +1,7 @@
 # WoW Soft Reserve Tracker
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/b51008f7-0697-4628-8be3-ad9bad7c8c65/deploy-status)](https://app.netlify.com/sites/the-usual-suspects/deploys)
+
 ## What Is It?
 
 **WoW Soft Reserve Tracker** is a fun and practical web app designed to make your World of Warcraft raids a little bit smoother. It helps guild members and PUGs (Pick-Up Group players) manage item reservations and track their raid attendance. You can reserve those shiny loot drops and keep track of your progress with ease — no more confusion, just loot!
